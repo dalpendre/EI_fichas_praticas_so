@@ -1,0 +1,7 @@
+package "program"
+purpose "test gengetopt features"
+version "1.0"
+
+option "person" p "name of the person" string yes
+option "age" a "age of the person" int no
+option "height" h "height of the person" double no

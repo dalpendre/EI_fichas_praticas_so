@@ -1,0 +1,3 @@
+a) mkdir aula2
+
+b) cd aula2, cat /etc/passwd > utilizadores.txt

@@ -1,0 +1,2 @@
+1j) a. cd .. 
+b. cat /etc/services > services.txt, cp services.txt temp/trabalhos/

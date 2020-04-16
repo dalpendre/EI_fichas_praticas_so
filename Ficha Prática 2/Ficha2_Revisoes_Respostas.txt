@@ -1,0 +1,31 @@
+a. base64 /etc/passwd | head -n 3 > top3_passwd.64
+
+b. df -h /dev/sda2 (-h para ser legível a humanos, devolve em GB)
+
+c. base64 /etc/hosts | grep -n 'a\|A' (dúvida se posso usar \|)
+
+d. ?
+
+e. ?
+
+f. ?
+
+g. ls /etc/  > listagem_etc_$(date '+%Y-%m-%d').txt
+
+h. 
+
+i. 
+
+j. 
+
+k. 
+
+l.
+
+m.
+
+n.
+
+o.
+
+p.

@@ -1,0 +1,84 @@
+/ como C:\Users/miguel.negrao
+
+/home/user = ~
+
+comando pwd devolve diretoria atual
+
+ls -la = ls -a -l = ls -a (Devolve info diretorias 
+numa diretoria)
+
+history - devolve ultimos comandos
+
+apt --> comandos para pesquisar e gerir infromação sobre
+pacotes
+
+apt list --installed --> lista todos os pacotes instalados
+
+id --> mostra os grupos que o utilizador está com o seu respetivo id
+
+groups --> mostra os grupos em que o utilizador está sem id
+
+redirecionamento
+
+1> é igual a > que redireciona para o stdout
+
+2> redireciona para o stderr
+
+> 2>&1 redireciona stdout + stderr
+
+date > data.txt --> escreve a data atual num ficheiro
+
+cat data.txt --> mostra conteúdo do ficheiro data.txt
+
+tr 'o' '*' < dados --> substitu caracter o por * no 
+conteúdo do ficheiro dados
+
+ls | tr 'o' '*' --> lista conteúdo da diretoria atual substituindo
+os o por *
+
+ls | tr 'o' '*' | grep '^D' --> Comando anterior para diretorias
+que começam com a letra indicada (D)
+
+ps aux --> Devolve processos a correr no sistema
+
+ps aux | wc -l --> Devolve numero de processos
+
+ps auxh | wc -l
+
+find . --> Todos os ficheiros e diretorias dentro da diretoria
+atual
+
+find . | wc -l --> Lista o número de ficheiros e diretorias 
+dentro da diretoria atual
+
+/home/user --> caminho absoluto
+
+./Documents --> caminho relativo
+
+mkdir --> Criar diretoria (Usar plicas para nomes com espaços)
+
+man comando --> pesquisar definição sobre um comando específico
+
+/palavra
+
+/palavra --> pesquisa texto na definição
+
+n --> proximo resultado
+N --> resultado anterior
+q --> sair
+
+man 3 printf --> Ir para a definição do printf
+man 3 fopen --> Ir para a definição do fopen
+
+3 é a secção
+
+whatis comando --> definição
+
+whereis comando --> onde está escrito um comando
+
+which comando --> sub pasta onde está escrito um comando
+
+ls -l --> Mostra ficheiros e subdiretorias, com permissões,
+utilizadores
+
+ls -l /var --> Do sistema mas podem ser alterados

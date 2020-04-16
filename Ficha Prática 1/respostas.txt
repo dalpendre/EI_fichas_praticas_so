@@ -1,0 +1,19 @@
+ex1)
+
+Devolve o nome da distribuição linux a ser usada, a versão a ser usada e as horas
+
+ex1a)
+
+ex1b) i) O pacote curl já está instalado na versão mais recente.
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+curl is already the newest version (7.58.0-2ubuntu3).
+The following packages were automatically installed and are no longer required:
+  browser-plugin-evince epiphany-browser-data
+Use 'sudo apt autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+
+ii) Mostra informação detalhado do curl.
+
+Exercício fuso horário) Não mudou corretamente a hora
