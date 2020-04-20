@@ -1,28 +1,27 @@
-# flags para o compilador
-CFLAGS = -std=c11 -Wall -Wextra
+# Compiler flags
+CFLAGS=-Wall -Wextra -ggdb -std=c11 -pedantic-errors #-pg
 
-# ficheiros objecto
-OBJS = main.o args.o
-PROGRAM = program
-PROGRAM_OPTS = args
+# Name of the executable
+PROGRAM=conta_letra_v2
+
+# Object files required to build the executable
+PROGRAM_OBJS=main.o conta_letra_v2.o
+
+# Clean and all are not files
+.PHONY: clean all  
 
 all: $(PROGRAM)
 
-$(PROGRAM): $(OBJS)
-	$(CC) -o $@ $(OBJS)
+$(PROGRAM): $(PROGRAM_OBJS)
+	$(CC) -o $@ $(PROGRAM_OBJS)
 
-#Fazer gengetopt gerar os ficheiros .c e .h
-$(PROGRAM_OPTS).c $(PROGRAM_OPTS).h: $(PROGRAM_OPTS).ggo
-	gengetopt --file-name=$(PROGRAM_OPTS) < $(PROGRAM_OPTS).ggo
+# Dependencies
+main.o: main.c conta_letra_v2.h
+conta_letra_v2.o: conta_letra_v2.c conta_letra_v2.h
 
-# Lista de dependências dos ficheiros código fonte
-main.o: main.c $(PROGRAM_OPTS).h
-$(PROGRAM_OPTS).o: $(PROGRAM_OPTS).c $(PROGRAM_OPTS).h
-
-# Indica como transformar um ficheiro .c num ficheiro .o
+#how to create an object file (.o) from C file (.c)
 .c.o:
 	$(CC) $(CFLAGS) -c $<
 
-# remove ficheiros sem interesse
 clean:
-	rm -f *.o core.* *~ $(PROGRAM)
+	rm -f *.o core.* *~ $(PROGRAM) *.bak

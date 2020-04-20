@@ -2,14 +2,5 @@ package "program"
 purpose "test gengetopt features"
 version "1.0"
 
-option "text" t "name of the person" string yes
-option "letter" l "age of the person" int no
-
-    if(argc != 3)
-    {
-        fprintf(stderr, "Error: 2 arguments expected!\n");
-        return 1;
-    }
-
-    char *text = argv[1];
-    char *letterString = argv[2];
+option "string" s "string" string yes
+option "letter" l "letter" string yes
