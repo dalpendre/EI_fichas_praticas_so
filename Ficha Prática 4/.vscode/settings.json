@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "conta_letra.h": "c"
+        "conta_letra.h": "c",
+        "string.h": "c",
+        "conta_letra_v2.h": "c"
     }
 }

@@ -4,3 +4,4 @@ version "1.0"
 
 option "string" s "string" string yes
 option "letter" l "letter" string yes
+option "help" h "help" string no

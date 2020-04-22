@@ -1,17 +1,20 @@
 #include <string.h>
+#include <stdio.h>
 
-#include "conta_letra.h"
+#include "args.h"
 
-int conta_letra(char *str, char c)
+int conta_letra(char *str, char *c)
 {
     int max = strlen(str);
-    int count = 0;
+    int ocurrence_count = 0;
 
     for(int i = 0; i < max; i++)
     {
-        if(str[i] == c)
-            count++;
+        struct gengetopt_args_info args_info;
+
+        printf("\n\t%s\n", args_info.string_arg);
+        printf("\n\t%s\n", args_info.letter_arg);
     }
 
-    return count;
+    return ocurrence_count;
 }

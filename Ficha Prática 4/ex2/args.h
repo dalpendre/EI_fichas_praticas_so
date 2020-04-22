@@ -48,14 +48,22 @@ struct gengetopt_args_info
   double height_arg;	/**< @brief height of the person.  */
   char * height_orig;	/**< @brief height of the person original value given at command line.  */
   const char *height_help; /**< @brief height of the person help description.  */
-  
-  unsigned int help_given ;	/**< @brief Whether help was given.  */
+
+  //unsigned int help_given ;	/**< @brief Whether help was given.  */
   unsigned int version_given ;	/**< @brief Whether version was given.  */
   unsigned int person_given ;	/**< @brief Whether person was given.  */
   unsigned int age_given ;	/**< @brief Whether age was given.  */
   unsigned int height_given ;	/**< @brief Whether height was given.  */
 
-} ;
+  //Ex2
+  char * string_arg;
+  char * letter_arg;
+  char * help_arg;
+
+  unsigned int string_given;
+  unsigned int letter_given;
+  unsigned int help_given;
+};
 
 /** @brief The additional parameters to pass to parser functions */
 struct cmdline_parser_params
