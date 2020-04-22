@@ -1,4 +1,5 @@
 //22/04/2020
+//Conta vogais em cada argumento
 
 #include <stdio.h>
 #include <string.h>
