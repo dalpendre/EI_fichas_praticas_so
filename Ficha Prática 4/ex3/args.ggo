@@ -1,0 +1,5 @@
+package "program"
+purpose "test gengetopt features"
+version "1.0"
+
+option "num" n "num" int required
