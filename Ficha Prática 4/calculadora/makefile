@@ -2,11 +2,11 @@
 CFLAGS=-Wall -Wextra -ggdb -std=c11 -pedantic-errors #-pg
 
 # Name of the executable
-PROGRAM=conta_letra_v2
+PROGRAM=calculator
 PROGRAM_OPT = args
 
 # Object files required to build the executable
-PROGRAM_OBJS=main.o args.o conta_letra_v2.o
+PROGRAM_OBJS=main.o args.o calculator.o
 
 # Clean and all are not files
 .PHONY: clean all  
@@ -17,8 +17,8 @@ $(PROGRAM): $(PROGRAM_OBJS)
 	$(CC) -o $@ $(PROGRAM_OBJS)
 
 # Dependencies
-main.o: main.c args.h conta_letra_v2.h
-conta_letra_v2.o: conta_letra_v2.c conta_letra_v2.h
+main.o: main.c args.h calculator.h
+calculadora.o: calculator.c calculator.h
 
 $(PROGRAM_OPT).o: $(PROGRAM_OPT).c $(PROGRAM_OPT).h
 #how to create an object file (.o) from C file (.c)

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "conta_letra_v2.h"
+#include "calculator.h"
 #include "args.h"
 
 int main(int argc, char *argv[])
@@ -9,9 +9,9 @@ int main(int argc, char *argv[])
 
     cmdline_parser(argc, argv, &args_info);
 
-    int count = conta_letra(args_info.string_arg, args_info.letter_arg);
+    float sum = sum(args_info.num1_arg, args_info.num2_arg);
 
-    printf("%i\n", count);
+    printf("%i\n", sum);
 
     cmdline_parser_free(&args_info);
 

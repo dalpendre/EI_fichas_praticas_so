@@ -14,5 +14,7 @@ int main(void)
         ptr++;
     }
 
+    printf("%i\n", soma);
+
     return soma;
 }

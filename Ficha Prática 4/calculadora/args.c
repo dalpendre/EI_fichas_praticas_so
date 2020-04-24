@@ -34,15 +34,15 @@ const char *gengetopt_args_info_versiontext = "";
 const char *gengetopt_args_info_description = "";
 
 const char *gengetopt_args_info_help[] = {
-  "  -h, --help           Print help and exit",
-  "  -V, --version        Print version and exit",
-  "  -s, --string=STRING  string",
-  "  -l, --letter=STRING  letter",
+  "  -h, --help      Print help and exit",
+  "  -V, --version   Print version and exit",
+  "  -x, --num1=INT  num1",
+  "  -y, --num2=INT  num2",
     0
 };
 
 typedef enum {ARG_NO
-  , ARG_STRING
+  , ARG_INT
 } cmdline_parser_arg_type;
 
 static
@@ -65,18 +65,16 @@ void clear_given (struct gengetopt_args_info *args_info)
 {
   args_info->help_given = 0 ;
   args_info->version_given = 0 ;
-  args_info->string_given = 0 ;
-  args_info->letter_given = 0 ;
+  args_info->num1_given = 0 ;
+  args_info->num2_given = 0 ;
 }
 
 static
 void clear_args (struct gengetopt_args_info *args_info)
 {
   FIX_UNUSED (args_info);
-  args_info->string_arg = NULL;
-  args_info->string_orig = NULL;
-  args_info->letter_arg = NULL;
-  args_info->letter_orig = NULL;
+  args_info->num1_orig = NULL;
+  args_info->num2_orig = NULL;
   
 }
 
@@ -87,8 +85,8 @@ void init_args_info(struct gengetopt_args_info *args_info)
 
   args_info->help_help = gengetopt_args_info_help[0] ;
   args_info->version_help = gengetopt_args_info_help[1] ;
-  args_info->string_help = gengetopt_args_info_help[2] ;
-  args_info->letter_help = gengetopt_args_info_help[3] ;
+  args_info->num1_help = gengetopt_args_info_help[2] ;
+  args_info->num2_help = gengetopt_args_info_help[3] ;
   
 }
 
@@ -172,10 +170,8 @@ static void
 cmdline_parser_release (struct gengetopt_args_info *args_info)
 {
 
-  free_string_field (&(args_info->string_arg));
-  free_string_field (&(args_info->string_orig));
-  free_string_field (&(args_info->letter_arg));
-  free_string_field (&(args_info->letter_orig));
+  free_string_field (&(args_info->num1_orig));
+  free_string_field (&(args_info->num2_orig));
   
   
 
@@ -210,10 +206,10 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "help", 0, 0 );
   if (args_info->version_given)
     write_into_file(outfile, "version", 0, 0 );
-  if (args_info->string_given)
-    write_into_file(outfile, "string", args_info->string_orig, 0);
-  if (args_info->letter_given)
-    write_into_file(outfile, "letter", args_info->letter_orig, 0);
+  if (args_info->num1_given)
+    write_into_file(outfile, "num1", args_info->num1_orig, 0);
+  if (args_info->num2_given)
+    write_into_file(outfile, "num2", args_info->num2_orig, 0);
   
 
   i = EXIT_SUCCESS;
@@ -330,15 +326,15 @@ cmdline_parser_required2 (struct gengetopt_args_info *args_info, const char *pro
   FIX_UNUSED (additional_error);
 
   /* checks for required options */
-  if (! args_info->string_given)
+  if (! args_info->num1_given)
     {
-      fprintf (stderr, "%s: '--string' ('-s') option required%s\n", prog_name, (additional_error ? additional_error : ""));
+      fprintf (stderr, "%s: '--num1' ('-x') option required%s\n", prog_name, (additional_error ? additional_error : ""));
       error_occurred = 1;
     }
   
-  if (! args_info->letter_given)
+  if (! args_info->num2_given)
     {
-      fprintf (stderr, "%s: '--letter' ('-l') option required%s\n", prog_name, (additional_error ? additional_error : ""));
+      fprintf (stderr, "%s: '--num2' ('-y') option required%s\n", prog_name, (additional_error ? additional_error : ""));
       error_occurred = 1;
     }
   
@@ -383,7 +379,6 @@ int update_arg(void *field, char **orig_field,
   char *stop_char = 0;
   const char *val = value;
   int found;
-  char **string_field;
   FIX_UNUSED (field);
 
   stop_char = 0;
@@ -414,18 +409,24 @@ int update_arg(void *field, char **orig_field,
     val = possible_values[found];
 
   switch(arg_type) {
-  case ARG_STRING:
-    if (val) {
-      string_field = (char **)field;
-      if (!no_free && *string_field)
-        free (*string_field); /* free previous string */
-      *string_field = gengetopt_strdup (val);
-    }
+  case ARG_INT:
+    if (val) *((int *)field) = strtol (val, &stop_char, 0);
     break;
   default:
     break;
   };
 
+  /* check numeric conversion */
+  switch(arg_type) {
+  case ARG_INT:
+    if (val && !(stop_char && *stop_char == '\0')) {
+      fprintf(stderr, "%s: invalid numeric value: %s\n", package_name, val);
+      return 1; /* failure */
+    }
+    break;
+  default:
+    ;
+  };
 
   /* store the original value */
   switch(arg_type) {
@@ -486,12 +487,12 @@ cmdline_parser_internal (
       static struct option long_options[] = {
         { "help",	0, NULL, 'h' },
         { "version",	0, NULL, 'V' },
-        { "string",	1, NULL, 's' },
-        { "letter",	1, NULL, 'l' },
+        { "num1",	1, NULL, 'x' },
+        { "num2",	1, NULL, 'y' },
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hVs:l:", long_options, &option_index);
+      c = getopt_long (argc, argv, "hVx:y:", long_options, &option_index);
 
       if (c == -1) break;	/* Exit from `while (1)' loop.  */
 
@@ -507,26 +508,26 @@ cmdline_parser_internal (
           cmdline_parser_free (&local_args_info);
           exit (EXIT_SUCCESS);
 
-        case 's':	/* string.  */
+        case 'x':	/* num1.  */
         
         
-          if (update_arg( (void *)&(args_info->string_arg), 
-               &(args_info->string_orig), &(args_info->string_given),
-              &(local_args_info.string_given), optarg, 0, 0, ARG_STRING,
+          if (update_arg( (void *)&(args_info->num1_arg), 
+               &(args_info->num1_orig), &(args_info->num1_given),
+              &(local_args_info.num1_given), optarg, 0, 0, ARG_INT,
               check_ambiguity, override, 0, 0,
-              "string", 's',
+              "num1", 'x',
               additional_error))
             goto failure;
         
           break;
-        case 'l':	/* letter.  */
+        case 'y':	/* num2.  */
         
         
-          if (update_arg( (void *)&(args_info->letter_arg), 
-               &(args_info->letter_orig), &(args_info->letter_given),
-              &(local_args_info.letter_given), optarg, 0, 0, ARG_STRING,
+          if (update_arg( (void *)&(args_info->num2_arg), 
+               &(args_info->num2_orig), &(args_info->num2_given),
+              &(local_args_info.num2_given), optarg, 0, 0, ARG_INT,
               check_ambiguity, override, 0, 0,
-              "letter", 'l',
+              "num2", 'y',
               additional_error))
             goto failure;
         

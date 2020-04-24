@@ -10,10 +10,6 @@ int conta_letra(char *str, char *c)
 
     for(int i = 0; i < max; i++)
     {
-        struct gengetopt_args_info args_info;
-
-        printf("\n\t%s\n", args_info.string_arg);
-        printf("\n\t%s\n", args_info.letter_arg);
     }
 
     return ocurrence_count;
