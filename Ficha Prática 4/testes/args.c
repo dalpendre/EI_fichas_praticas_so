@@ -34,12 +34,14 @@ const char *gengetopt_args_info_versiontext = "versiontext needed (optional)";
 const char *gengetopt_args_info_description = "description needed (optional)";
 
 const char *gengetopt_args_info_help[] = {
-  "  -h, --help     Print help and exit",
-  "  -V, --version  Print version and exit",
+  "  -h, --help         Print help and exit",
+  "  -V, --version      Print version and exit",
+  "  -n, --name=STRING  username",
     0
 };
 
 typedef enum {ARG_NO
+  , ARG_STRING
 } cmdline_parser_arg_type;
 
 static
@@ -51,6 +53,8 @@ static int
 cmdline_parser_internal (int argc, char **argv, struct gengetopt_args_info *args_info,
                         struct cmdline_parser_params *params, const char *additional_error);
 
+static int
+cmdline_parser_required2 (struct gengetopt_args_info *args_info, const char *prog_name, const char *additional_error);
 
 static char *
 gengetopt_strdup (const char *s);
@@ -60,12 +64,15 @@ void clear_given (struct gengetopt_args_info *args_info)
 {
   args_info->help_given = 0 ;
   args_info->version_given = 0 ;
+  args_info->name_given = 0 ;
 }
 
 static
 void clear_args (struct gengetopt_args_info *args_info)
 {
   FIX_UNUSED (args_info);
+  args_info->name_arg = NULL;
+  args_info->name_orig = NULL;
   
 }
 
@@ -76,6 +83,7 @@ void init_args_info(struct gengetopt_args_info *args_info)
 
   args_info->help_help = gengetopt_args_info_help[0] ;
   args_info->version_help = gengetopt_args_info_help[1] ;
+  args_info->name_help = gengetopt_args_info_help[2] ;
   
 }
 
@@ -144,12 +152,23 @@ cmdline_parser_params_create(void)
   return params;
 }
 
+static void
+free_string_field (char **s)
+{
+  if (*s)
+    {
+      free (*s);
+      *s = 0;
+    }
+}
 
 
 static void
 cmdline_parser_release (struct gengetopt_args_info *args_info)
 {
 
+  free_string_field (&(args_info->name_arg));
+  free_string_field (&(args_info->name_orig));
   
   
 
@@ -184,6 +203,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "help", 0, 0 );
   if (args_info->version_given)
     write_into_file(outfile, "version", 0, 0 );
+  if (args_info->name_given)
+    write_into_file(outfile, "name", args_info->name_orig, 0);
   
 
   i = EXIT_SUCCESS;
@@ -279,14 +300,136 @@ cmdline_parser2 (int argc, char **argv, struct gengetopt_args_info *args_info, i
 int
 cmdline_parser_required (struct gengetopt_args_info *args_info, const char *prog_name)
 {
-  FIX_UNUSED (args_info);
-  FIX_UNUSED (prog_name);
-  return EXIT_SUCCESS;
+  int result = EXIT_SUCCESS;
+
+  if (cmdline_parser_required2(args_info, prog_name, 0) > 0)
+    result = EXIT_FAILURE;
+
+  if (result == EXIT_FAILURE)
+    {
+      cmdline_parser_free (args_info);
+      exit (EXIT_FAILURE);
+    }
+  
+  return result;
+}
+
+int
+cmdline_parser_required2 (struct gengetopt_args_info *args_info, const char *prog_name, const char *additional_error)
+{
+  int error_occurred = 0;
+  FIX_UNUSED (additional_error);
+
+  /* checks for required options */
+  if (! args_info->name_given)
+    {
+      fprintf (stderr, "%s: '--name' ('-n') option required%s\n", prog_name, (additional_error ? additional_error : ""));
+      error_occurred = 1;
+    }
+  
+  
+  /* checks for dependences among options */
+
+  return error_occurred;
 }
 
 
 static char *package_name = 0;
 
+/**
+ * @brief updates an option
+ * @param field the generic pointer to the field to update
+ * @param orig_field the pointer to the orig field
+ * @param field_given the pointer to the number of occurrence of this option
+ * @param prev_given the pointer to the number of occurrence already seen
+ * @param value the argument for this option (if null no arg was specified)
+ * @param possible_values the possible values for this option (if specified)
+ * @param default_value the default value (in case the option only accepts fixed values)
+ * @param arg_type the type of this option
+ * @param check_ambiguity @see cmdline_parser_params.check_ambiguity
+ * @param override @see cmdline_parser_params.override
+ * @param no_free whether to free a possible previous value
+ * @param multiple_option whether this is a multiple option
+ * @param long_opt the corresponding long option
+ * @param short_opt the corresponding short option (or '-' if none)
+ * @param additional_error possible further error specification
+ */
+static
+int update_arg(void *field, char **orig_field,
+               unsigned int *field_given, unsigned int *prev_given, 
+               char *value, const char *possible_values[],
+               const char *default_value,
+               cmdline_parser_arg_type arg_type,
+               int check_ambiguity, int override,
+               int no_free, int multiple_option,
+               const char *long_opt, char short_opt,
+               const char *additional_error)
+{
+  char *stop_char = 0;
+  const char *val = value;
+  int found;
+  char **string_field;
+  FIX_UNUSED (field);
+
+  stop_char = 0;
+  found = 0;
+
+  if (!multiple_option && prev_given && (*prev_given || (check_ambiguity && *field_given)))
+    {
+      if (short_opt != '-')
+        fprintf (stderr, "%s: `--%s' (`-%c') option given more than once%s\n", 
+               package_name, long_opt, short_opt,
+               (additional_error ? additional_error : ""));
+      else
+        fprintf (stderr, "%s: `--%s' option given more than once%s\n", 
+               package_name, long_opt,
+               (additional_error ? additional_error : ""));
+      return 1; /* failure */
+    }
+
+  FIX_UNUSED (default_value);
+    
+  if (field_given && *field_given && ! override)
+    return 0;
+  if (prev_given)
+    (*prev_given)++;
+  if (field_given)
+    (*field_given)++;
+  if (possible_values)
+    val = possible_values[found];
+
+  switch(arg_type) {
+  case ARG_STRING:
+    if (val) {
+      string_field = (char **)field;
+      if (!no_free && *string_field)
+        free (*string_field); /* free previous string */
+      *string_field = gengetopt_strdup (val);
+    }
+    break;
+  default:
+    break;
+  };
+
+
+  /* store the original value */
+  switch(arg_type) {
+  case ARG_NO:
+    break;
+  default:
+    if (value && orig_field) {
+      if (no_free) {
+        *orig_field = value;
+      } else {
+        if (*orig_field)
+          free (*orig_field); /* free previous string */
+        *orig_field = gengetopt_strdup (value);
+      }
+    }
+  };
+
+  return 0; /* OK */
+}
 
 
 int
@@ -328,10 +471,11 @@ cmdline_parser_internal (
       static struct option long_options[] = {
         { "help",	0, NULL, 'h' },
         { "version",	0, NULL, 'V' },
+        { "name",	1, NULL, 'n' },
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hV", long_options, &option_index);
+      c = getopt_long (argc, argv, "hVn:", long_options, &option_index);
 
       if (c == -1) break;	/* Exit from `while (1)' loop.  */
 
@@ -347,6 +491,18 @@ cmdline_parser_internal (
           cmdline_parser_free (&local_args_info);
           exit (EXIT_SUCCESS);
 
+        case 'n':	/* username.  */
+        
+        
+          if (update_arg( (void *)&(args_info->name_arg), 
+               &(args_info->name_orig), &(args_info->name_given),
+              &(local_args_info.name_given), optarg, 0, 0, ARG_STRING,
+              check_ambiguity, override, 0, 0,
+              "name", 'n',
+              additional_error))
+            goto failure;
+        
+          break;
 
         case 0:	/* Long option with no short option */
         case '?':	/* Invalid option.  */
@@ -361,6 +517,10 @@ cmdline_parser_internal (
 
 
 
+  if (check_required)
+    {
+      error_occurred += cmdline_parser_required2 (args_info, argv[0], additional_error);
+    }
 
   cmdline_parser_release (&local_args_info);
 

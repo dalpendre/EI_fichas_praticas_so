@@ -1,6 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-#include "calculator.h"
 #include "args.h"
 
 int main(int argc, char *argv[])
@@ -9,9 +9,8 @@ int main(int argc, char *argv[])
 
     cmdline_parser(argc, argv, &args_info);
 
-    float sum = sum(args_info.num1_arg, args_info.num2_arg);
-
-    printf("%i\n", sum);
+    printf("%s\n", args_info.name_arg);
+    printf("%i\n", args_info.name_given);
 
     cmdline_parser_free(&args_info);
 

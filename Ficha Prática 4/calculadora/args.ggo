@@ -1,6 +1,0 @@
-package "program"
-purpose "test gengetopt features"
-version "1.0"
-
-option "num1" x "num1" int yes
-option "num2" y "num2" int yes

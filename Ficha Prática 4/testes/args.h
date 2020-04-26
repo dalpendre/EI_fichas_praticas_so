@@ -39,9 +39,13 @@ struct gengetopt_args_info
 {
   const char *help_help; /**< @brief Print help and exit help description.  */
   const char *version_help; /**< @brief Print version and exit help description.  */
+  char * name_arg;	/**< @brief username.  */
+  char * name_orig;	/**< @brief username original value given at command line.  */
+  const char *name_help; /**< @brief username help description.  */
   
   unsigned int help_given ;	/**< @brief Whether help was given.  */
   unsigned int version_given ;	/**< @brief Whether version was given.  */
+  unsigned int name_given ;	/**< @brief Whether name was given.  */
 
 } ;
 

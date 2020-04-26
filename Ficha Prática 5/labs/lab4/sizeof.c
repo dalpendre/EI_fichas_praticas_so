@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-int main(void) {
+int main(void) 
+{
    char *ptr = NULL;
 
    printf("sizeof(*ptr)=%zu\n", sizeof(*ptr));
