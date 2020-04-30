@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "stdio.h": "c",
-        "debug.h": "c"
+        "debug.h": "c",
+        "calculadora.h": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

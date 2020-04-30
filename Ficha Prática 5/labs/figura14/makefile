@@ -1,10 +1,8 @@
 # Flags para o compilador
 CFLAGS=-Wall -Wextra -ggdb -std=c11 -pedantic
 
-LIBS=-lm -pthread
-
 # nome do executavel
-PROGRAM=testes
+PROGRAM=figura14
 
 # Lista de objectos necessarios para criar o executavel
 PROGRAM_OBJS=main.o
@@ -24,4 +22,4 @@ main.o: main.c
 	${CC} ${CFLAGS} -c $<
 
 clean:
-	rm -f *.o core core.* *~ ${PROGRAM} *.bak
+	rm -f *.o core.* *~ ${PROGRAM} *.bak

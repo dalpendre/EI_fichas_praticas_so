@@ -1,12 +1,25 @@
 #include <stdio.h>
 
-int main(void)
+void f2(void)
+{
+  long *vect_not_initialized = NULL;
+  unsigned int i = 0;
+
+  for(i = 0; i < 10; i++)
+  {
+    vect_not_initialized[i] = i*100;
+  }
+}
+
+void f1(void)
+{
+  int x = 32;
+  f2();
+}
+
+int main(int arg, char *argv[])
 {  
-  long * vect_not_initialized=NULL;
-  unsigned int i=0;
-   
-  for(i=0;i<10;i++)
-    vect_not_initialized[i]=i*100;
-  
+  f1();
+
   return 0;
 }
