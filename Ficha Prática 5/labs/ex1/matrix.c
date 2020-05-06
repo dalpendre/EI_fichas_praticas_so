@@ -54,3 +54,21 @@ int matrix_new(int argc, char *argv[])
 
     return 0;
 }
+
+//Fills matrix with value
+int matrix_fill(int x)
+{
+
+}
+
+//Prints to stdout the values of the matrix
+matrix_print()
+{
+
+}
+
+//Multiplies 2 matrixes passed by parameter
+matrix_mul()
+{
+    
+}
