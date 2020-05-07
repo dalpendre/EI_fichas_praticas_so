@@ -15,7 +15,7 @@ int main(void)
 		ERROR(ERR_IO, "Erro ao abrir o ficheiro para acrescimo");
 	
 	text = fgets(buffer, MAX, stdin);
-	while (text != NULL && strcmp(buffer, "fim\n") != 0) 
+	while (text != NULL && strcmp(buffer, "fim\n") != 0)  
 	{
 		if (fputs(buffer, fptr) == EOF) 
 		{ 
