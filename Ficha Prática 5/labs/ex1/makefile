@@ -15,7 +15,8 @@ ${PROGRAM}: ${PROGRAM_OBJS}
 	${CC} -o $@ ${PROGRAM_OBJS}
 
 # Dependencias
-main.o: main.c matrix.c
+main.o: main.c matrix.h
+matrix.o: matrix.c
 
 #como compilar .o a partir de .c
 .c.o:

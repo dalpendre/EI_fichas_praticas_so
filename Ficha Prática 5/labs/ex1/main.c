@@ -22,9 +22,6 @@ int main(int argc, char *argv[])
     int b_row = atoi(argv[3]);
     int b_col = atoi(argv[4]);
 
-    if(a_row == 0 || a_col == 0 || b_row == 0)
-    {}
-
     float **matrixA = matrix_new(a_row, a_col);
     float **matrixB = matrix_new(a_row, a_col);
 
@@ -35,5 +32,5 @@ int main(int argc, char *argv[])
     matrix_print(matrixB, b_row, b_col);
 
     float **matrixC = matrix_mul(matrixA, matrixB, a_row, b_col, a_col);
-    matrix_print()
+    matrix_print(matrixC, a_row, b_col);
 }

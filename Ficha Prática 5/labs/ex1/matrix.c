@@ -8,8 +8,8 @@
 float **matrix_new(int num_rows, int num_cols)
 {
     //Allocate the memory
-    size_t mem_len = num_rows * num_cols * sizeof(int);
-    float **matrix_ptr = MALLOC(mem_len);
+    size_t mem_len = num_rows * num_cols * sizeof(float);
+    float *matrix_ptr = MALLOC(mem_len);
 
     size_t vect_len = sizeof(float*) * num_rows;
     float **matrix_vect_ptr = MALLOC(vect_len);

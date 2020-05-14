@@ -39,8 +39,6 @@ int main(int argc, char *argv[])
     size_t vect_len = sizeof(int *) * num_rows;
     int **matrix_vect_ptr = (int**) malloc(vect_len);
 
-    /*Dúvida nas linhas acima ver na aula de 30 abril*/
-
     if(matrix_vect_ptr == NULL)
     {
         fprintf(stderr, "Can't allocate %zu bytes for %d vector\n", mem_len, num_rows);
@@ -52,7 +50,7 @@ int main(int argc, char *argv[])
     //Create the connection from the vector to the main block
     for(row = 0; row < num_rows; row++)
     {
-        matrix_vect_ptr[row] = &(matrix_vect_ptr[row*num_cols]);
+        matrix_vect_ptr[row] = &(matrix_ptr[row*num_cols]);
     }
 
     //Iterate over the matrix, with the [row] [col] notation
